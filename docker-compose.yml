@@ -1,0 +1,30 @@
+services:
+
+  spark-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+
+    container_name: movie-spark-backend
+
+    volumes:
+      - ./data:/app/data
+      - ./backend/output:/app/backend/output
+      - ./frontend/src/data:/app/frontend/src/data
+
+    environment:
+      - PYSPARK_PYTHON=python3
+      - PYSPARK_DRIVER_PYTHON=python3
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+
+    container_name: movie-react-frontend
+
+    ports:
+      - "8080:80"
+
+    depends_on:
+      - spark-backend
